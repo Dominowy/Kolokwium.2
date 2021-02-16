@@ -102,8 +102,10 @@ namespace Kolokwium._2
         public void potrzebnaKrew(BankKrwi krew)
         {
             PotrzebnaKrew += krew.BankKrwi_PotrzebnaKrew;
+            krew.BrakKrwi += Szpital_BrakKrwi;
             PotrzebnaKrew?.Invoke(this, new KrewEventArgs(){GrupaKrwi = krew.GrupaKrwi});
             PotrzebnaKrew -= krew.BankKrwi_PotrzebnaKrew;
+            krew.BrakKrwi -= Szpital_BrakKrwi;
         }
         
         public void Szpital_BrakKrwi(object sender, KrewEventArgs e)
@@ -132,12 +134,13 @@ namespace Kolokwium._2
         {
             if (IloscKrwi == 0)
             {
+                Console.WriteLine("Ilość Krwi z grupy: " + GrupaKrwi + ": " + IloscKrwi);
                 brakKrwi(GrupaKrwi);
             }
             else
             {
-                Console.WriteLine("Potrzebna Krew: " + GrupaKrwi + " Ilosć: " + IloscKrwi); 
                 IloscKrwi--;
+                Console.WriteLine("Potrzebna Krew: " + GrupaKrwi + " Ilosć: " + IloscKrwi);
             }
         }
     }
@@ -179,43 +182,43 @@ namespace Kolokwium._2
         static void Main(string[] args)
         {
             //Zadanie1
-            //
-            // List<int> glosy = new List<int>();
-            //
-            // glosy.Add(51);
-            // glosy.Add(65);
-            // glosy.Add(86);
-            // glosy.Add(92);
-            // glosy.Add(51);
-            // glosy.Add(55);
-            // glosy.Add(52);
-            // glosy.Add(15);
-            // glosy.Add(353);
-            // glosy.Add(656);
-            //
-            // Glosowanie(glosy);
+            
+            List<int> glosy = new List<int>();
+            
+            glosy.Add(51);
+            glosy.Add(65);
+            glosy.Add(86);
+            glosy.Add(92);
+            glosy.Add(51);
+            glosy.Add(55);
+            glosy.Add(52);
+            glosy.Add(15);
+            glosy.Add(353);
+            glosy.Add(656);
+            
+            Glosowanie(glosy);
             
             //Zadanie2
 
-            //int moc_lacz = 0;
+            int moc_lacz = 0;
 
-            // List<IUrzadzenieElektryczne> urzadzenia = new List<IUrzadzenieElektryczne>();
-            // urzadzenia.Add(new Zarowka());
-            // urzadzenia.Add(new Zelazko());
-            // urzadzenia.Add(new Zarowka());
-            // urzadzenia.Add(new Zelazko());
+             List<IUrzadzenieElektryczne> urzadzenia = new List<IUrzadzenieElektryczne>();
+             urzadzenia.Add(new Zarowka());
+             urzadzenia.Add(new Zelazko());
+             urzadzenia.Add(new Zarowka());
+             urzadzenia.Add(new Zelazko());
 
-            // for (int i = 0; i < 10; i++)
-            // {
-            //     foreach (var value in urzadzenia)
-            //     {
-            //         value.Zasilaj();
-            //         moc_lacz += value.Moc();
-            //     }
-            //
-            //     Console.WriteLine(moc_lacz);
-            //     moc_lacz = 0;
-            // }
+             for (int i = 0; i < 10; i++)
+             {
+                 foreach (var value in urzadzenia)
+                 {
+                     value.Zasilaj();
+                     moc_lacz += value.Moc();
+                 }
+            
+                 Console.WriteLine(moc_lacz);
+                 moc_lacz = 0;
+             }
             
             //Zadanie3
 
@@ -228,16 +231,19 @@ namespace Kolokwium._2
             rhminus.GrupaKrwi = "RH-";
             rhplus.GrupaKrwi = "RH+";
             
-
-            stacja.OddanoKrew += rhminus.BankKrwi_OddanoKrew;
-            szpital.PotrzebnaKrew += rhminus.BankKrwi_PotrzebnaKrew;
-            
-            
-            
+            stacja.oddanoKrew(rhminus);
+            stacja.oddanoKrew(rhminus);
             stacja.oddanoKrew(rhminus);
             szpital.potrzebnaKrew(rhminus);
             szpital.potrzebnaKrew(rhminus);
             
+            stacja.oddanoKrew(rhplus);
+            stacja.oddanoKrew(rhplus);
+            stacja.oddanoKrew(rhplus);
+            szpital.potrzebnaKrew(rhplus);
+            szpital.potrzebnaKrew(rhplus);
+            szpital.potrzebnaKrew(rhplus);
+            szpital.potrzebnaKrew(rhplus);
 
         }
     }
