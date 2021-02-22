@@ -61,16 +61,10 @@ namespace Kolokwium._2
     }
     
     //Zadanie3
-
+    
     public class KrewEventArgs : EventArgs
     {
-        private string _grupaKrwi;
-
-        public string GrupaKrwi
-        {
-            get => _grupaKrwi;
-            set => _grupaKrwi = value;
-        }
+        public string GrupaKrwi { get; set; }
     }
 
     public class StacjaKrwiodastwa
