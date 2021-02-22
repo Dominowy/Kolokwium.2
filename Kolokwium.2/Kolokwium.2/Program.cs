@@ -10,20 +10,9 @@ namespace Kolokwium._2
 
     public class Piosenka
     {
-        private int _glosy;
-        private string _nazwa;
+        public int Glosy {get; set;}
 
-        public int Glosy
-        {
-            get => _glosy;
-            set => _glosy = value;
-        }
-
-        public string Nazwa
-        {
-            get => _nazwa;
-            set => _nazwa = value;
-        }
+        public string Nazwa {get; set;}
 
         public Piosenka(int glosy, string nazwa)
         {
@@ -87,11 +76,9 @@ namespace Kolokwium._2
     public class StacjaKrwiodastwa
     { 
         public event EventHandler<KrewEventArgs> OddanoKrew;
-        public void oddanoKrew(BankKrwi krew)
+        public void oddanoKrew(string krew)
         {
-            OddanoKrew += krew.BankKrwi_OddanoKrew;
-            OddanoKrew?.Invoke(this, new KrewEventArgs(){GrupaKrwi = krew.GrupaKrwi});
-            OddanoKrew -= krew.BankKrwi_OddanoKrew;
+            OddanoKrew?.Invoke(this, new KrewEventArgs(){GrupaKrwi = krew});
         }
     }
 
@@ -99,13 +86,9 @@ namespace Kolokwium._2
     {
         public event EventHandler<KrewEventArgs> PotrzebnaKrew;
 
-        public void potrzebnaKrew(BankKrwi krew)
+        public void potrzebnaKrew(string krew)
         {
-            PotrzebnaKrew += krew.BankKrwi_PotrzebnaKrew;
-            krew.BrakKrwi += Szpital_BrakKrwi;
-            PotrzebnaKrew?.Invoke(this, new KrewEventArgs(){GrupaKrwi = krew.GrupaKrwi});
-            PotrzebnaKrew -= krew.BankKrwi_PotrzebnaKrew;
-            krew.BrakKrwi -= Szpital_BrakKrwi;
+            PotrzebnaKrew?.Invoke(this, new KrewEventArgs(){GrupaKrwi = krew});
         }
         
         public void Szpital_BrakKrwi(object sender, KrewEventArgs e)
@@ -147,31 +130,17 @@ namespace Kolokwium._2
     
     class Program
     {
-        static void Glosowanie(List<int> glosy)
+        static void Glosowanie(List<int> glosy, Dictionary<int, Piosenka> piosenka)
         {
 
 
             for (int i = 0; i < glosy.Count; i++)
             {
-                glosy[i] = (int)(glosy[i] - (glosy[i] * 0.1));
+                piosenka[i].Glosy = (int)(piosenka[i].Glosy - (piosenka[i].Glosy * 0.1));
+                piosenka[i].Glosy = piosenka[i].Glosy + glosy[i];
             }
-
-
-
-            Dictionary<int, Piosenka> a = new Dictionary<int, Piosenka>();
-
-            a.Add(1, new Piosenka(glosy[0], "Piosenka 1"));
-            a.Add(2, new Piosenka(glosy[1], "Piosenka 2"));
-            a.Add(3, new Piosenka(glosy[2], "Piosenka 3"));
-            a.Add(4, new Piosenka(glosy[3], "Piosenka 4"));
-            a.Add(5, new Piosenka(glosy[4], "Piosenka 5"));
-            a.Add(6, new Piosenka(glosy[5], "Piosenka 6"));
-            a.Add(7, new Piosenka(glosy[6], "Piosenka 7"));
-            a.Add(8, new Piosenka(glosy[7], "Piosenka 8"));
-            a.Add(9, new Piosenka(glosy[8], "Piosenka 9"));
-            a.Add(10, new Piosenka(glosy[9], "Piosenka 10"));
-
-            var b = a.OrderByDescending(x => x.Value.Glosy);
+            
+            var b = piosenka.OrderByDescending(x => x.Value.Glosy);
 
             foreach (var item in b)
             {
@@ -196,18 +165,40 @@ namespace Kolokwium._2
             glosy.Add(353);
             glosy.Add(656);
             
-            Glosowanie(glosy);
+            Dictionary<int, Piosenka> a = new Dictionary<int, Piosenka>();
+
+            a.Add(0, new Piosenka(0, "Piosenka 1"));
+            a.Add(1, new Piosenka(0, "Piosenka 2"));
+            a.Add(2, new Piosenka(0, "Piosenka 3"));
+            a.Add(3, new Piosenka(0, "Piosenka 4"));
+            a.Add(4, new Piosenka(0, "Piosenka 5"));
+            a.Add(5, new Piosenka(0, "Piosenka 6"));
+            a.Add(6, new Piosenka(0, "Piosenka 7"));
+            a.Add(7, new Piosenka(0, "Piosenka 8"));
+            a.Add(8, new Piosenka(0, "Piosenka 9"));
+            a.Add(9, new Piosenka(0, "Piosenka 10"));
             
-            //Zadanie2
-
+            Glosowanie(glosy, a);
+            Glosowanie(glosy, a);
+            Glosowanie(glosy, a);
+            Glosowanie(glosy, a);
+            
+            
+            foreach (var item in a)
+            {
+                Console.WriteLine($"Nazwa: {item.Value.Nazwa} Głosów: {item.Value.Glosy}");
+            }
+            
+            // //Zadanie2
+            
             int moc_lacz = 0;
-
+            
              List<IUrzadzenieElektryczne> urzadzenia = new List<IUrzadzenieElektryczne>();
              urzadzenia.Add(new Zarowka());
              urzadzenia.Add(new Zelazko());
              urzadzenia.Add(new Zarowka());
              urzadzenia.Add(new Zelazko());
-
+            
              for (int i = 0; i < 10; i++)
              {
                  foreach (var value in urzadzenia)
@@ -223,27 +214,22 @@ namespace Kolokwium._2
             //Zadanie3
 
             var stacja = new StacjaKrwiodastwa();
-            var rhplus = new BankKrwi();
-            var rhminus = new BankKrwi();
+            var bank = new BankKrwi();
             var szpital = new Szpital();
             
-
-            rhminus.GrupaKrwi = "RH-";
-            rhplus.GrupaKrwi = "RH+";
+            szpital.PotrzebnaKrew += bank.BankKrwi_PotrzebnaKrew;
+            bank.BrakKrwi += szpital.Szpital_BrakKrwi;
+            stacja.OddanoKrew += bank.BankKrwi_OddanoKrew;
             
-            stacja.oddanoKrew(rhminus);
-            stacja.oddanoKrew(rhminus);
-            stacja.oddanoKrew(rhminus);
-            szpital.potrzebnaKrew(rhminus);
-            szpital.potrzebnaKrew(rhminus);
+            bank.GrupaKrwi = "RH+";
             
-            stacja.oddanoKrew(rhplus);
-            stacja.oddanoKrew(rhplus);
-            stacja.oddanoKrew(rhplus);
-            szpital.potrzebnaKrew(rhplus);
-            szpital.potrzebnaKrew(rhplus);
-            szpital.potrzebnaKrew(rhplus);
-            szpital.potrzebnaKrew(rhplus);
+            stacja.oddanoKrew(bank.GrupaKrwi);
+            stacja.oddanoKrew(bank.GrupaKrwi);
+            stacja.oddanoKrew(bank.GrupaKrwi);
+            szpital.potrzebnaKrew(bank.GrupaKrwi);
+            szpital.potrzebnaKrew(bank.GrupaKrwi);
+            szpital.potrzebnaKrew(bank.GrupaKrwi);
+            szpital.potrzebnaKrew(bank.GrupaKrwi);
 
         }
     }
